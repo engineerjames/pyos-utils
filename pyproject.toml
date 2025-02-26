@@ -1,0 +1,57 @@
+[project]
+name = "pyos-utils"
+version = "0.1.0"
+description = "Python utilities for working with the operating system."
+readme = "README.md"
+authors = [
+    { name = "James Armes", email = "jamesleearmes@gmail.com" }
+]
+requires-python = ">=3.11"
+dependencies = []
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "mypy>=1.15.0",
+    "pytest>=8.3.4",
+    "pytest-mock>=3.14.0",
+    "ruff>=0.9.7",
+]
+
+[tool.mypy]
+# Global options
+strict = true                # Enable strict mode for maximum type checking
+disallow_untyped_defs = true # Disallow functions and methods without type annotations
+warn_unused_ignores = true   # Warn about unused # type: ignore comments
+no_implicit_optional = true  # Don't assume that variables can be None unless explicitly annotated
+
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*.py" = ["S101", "D101","D102", "D103", "D107", "SLF001", "FBT003", "D100", "PLR2004", "S108"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+fix = true
+
+[tool.ruff.lint]
+ignore = [
+    "D212",
+    "D203",
+    "TD003",
+    "TD002",
+    "FIX002",
+    "D211",
+]
+
+select = [
+    "ALL", # include all the rules, including new ones
+]
+
+[tool.pytest.ini_options]
+    log_cli = true 
+    log_cli_level = "INFO" 
+    pythonpath = ["."]
