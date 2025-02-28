@@ -17,7 +17,11 @@ _interface = _PlatformSoundInterface()
 
 # Export the interface methods: TODO -- Add a test to ensure all methods are exported
 play_beep = _interface.play_beep
-play_alert = _interface.play_alert
+set_volume = _interface.set_volume
+get_volume = _interface.get_volume
+mute = _interface.mute
+unmute = _interface.unmute
+get_mute = _interface.get_mute
 
 # Type verification
 _impl: SoundInterface = _interface
