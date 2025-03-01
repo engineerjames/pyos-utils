@@ -9,7 +9,6 @@ authors = [
 requires-python = ">=3.11"
 dependencies = [
     "pycaw; sys_platform == 'win32'",
-    "pulseaudio-utils; sys_platform == 'linux'",  # provides pactl
 ]
 
 [build-system]
