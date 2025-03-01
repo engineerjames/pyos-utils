@@ -35,4 +35,4 @@ jobs:
         ./.venv/bin/mypy .
     - name: Test with pytest
       run: |
-        pytest
+        ./.venv/bin/pytest
