@@ -7,5 +7,8 @@
     "editor.codeActionsOnSave": {
       "source.organizeImports": "always"
     }
-  }
+  },
+  "python.testing.pytestArgs": ["tests"],
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestEnabled": true
 }

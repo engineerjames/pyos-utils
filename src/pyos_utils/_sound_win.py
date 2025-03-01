@@ -3,6 +3,7 @@ import winsound
 from comtypes import CLSCTX_ALL
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 
+from . import _sound_utilities
 from ._exceptions import BackendNotFoundError
 from ._sound_interface import SoundInterface
 
@@ -26,8 +27,7 @@ class WindowsSoundInterface(SoundInterface):
         """Set the system volume (0.0 to 1.0)."""
         # pycaw uses a range from -65.25 to 0.0 in dB
         # Convert linear 0-1 to proper dB range
-        if not 0.0 <= volume <= 1.0:
-            volume = max(0.0, min(1.0, volume))
+        volume = _sound_utilities.normalize_sound(volume)
         self._volume.SetMasterVolumeLevelScalar(volume, None)
 
     def get_volume(self) -> float:

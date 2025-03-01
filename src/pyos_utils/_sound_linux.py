@@ -2,7 +2,8 @@ import shutil
 import subprocess
 from pathlib import Path
 
-from ._exceptions import BackendNotFoundError
+from . import _sound_utilities
+from ._exceptions import BackendNotFoundError, OperationFailedError
 from ._sound_interface import SoundInterface
 
 
@@ -10,12 +11,13 @@ class LinuxSoundInterface(SoundInterface):
     def __init__(self) -> None:
         """Initialize the Linux sound interface using pactl."""
         self._pactl_path = Path("/usr/bin/pactl").resolve()
-        self._beep_path = Path("/usr/bin/beep").resolve()
+        self._beep_path: Path | None = Path("/usr/bin/beep").resolve()
 
         if not self._pactl_path.exists():
             pactl_str = shutil.which("pactl")
             if pactl_str is None:
-                raise BackendNotFoundError("pactl not found")
+                error_message = "pactl not found"
+                raise BackendNotFoundError(error_message)
             self._pactl_path = Path(pactl_str)
 
         if not self._beep_path.exists():
@@ -27,33 +29,49 @@ class LinuxSoundInterface(SoundInterface):
 
     def play_beep(self) -> None:
         """Play a beep sound using system beep."""
-        if self._beep_path:
-            subprocess.run(
-                [str(self._beep_path), "-f", "1000", "-l", "250"],
-                check=False,
-            )
-        else:
-            print("\a", flush=True)  # Fallback to terminal bell
+        if not self._beep_path:
+            error_message = "beep not found"
+            raise BackendNotFoundError(error_message)
+
+        completed_process = subprocess.run(
+            [str(self._beep_path), "-f", "1000", "-l", "250"],
+            check=False,
+            text=True,
+        )
+
+        if completed_process.returncode != 0:
+            error_message = f"Failed to play beep sound: {completed_process.stderr}"
+            raise OperationFailedError(error_message)
 
     def set_volume(self, volume: float) -> None:
         """Set the system volume (0.0 to 1.0)."""
-        volume = max(0.0, min(1.0, volume))
+        volume = _sound_utilities.normalize_sound(volume)
         volume_percent = int(volume * 100)
-        subprocess.run(
+        completed_process = subprocess.run(
             [str(self._pactl_path), "set-sink-volume", "@DEFAULT_SINK@", f"{volume_percent}%"],
             check=False,
+            text=True,
         )
+
+        if completed_process.returncode != 0:
+            error_message = f"Failed to set volume: {completed_process.stderr}"
+            raise OperationFailedError(error_message)
 
     def get_volume(self) -> float:
         """Get the system volume (returns 0.0 to 1.0)."""
-        result = subprocess.run(
+        completed_process = subprocess.run(
             [str(self._pactl_path), "get-sink-volume", "@DEFAULT_SINK@"],
             capture_output=True,
             text=True,
             check=False,
         )
+
+        if completed_process.returncode != 0:
+            error_message = f"Failed to get volume: {completed_process.stderr}"
+            raise OperationFailedError(error_message)
+
         # Parse the volume percentage from output like: "Volume: front-left: 65536 / 100% / -0.00 dB"
-        for line in result.stdout.split("\n"):
+        for line in completed_process.stdout.split("\n"):
             if "Volume:" in line and "%" in line:
                 percent = int(line.split("%")[0].split()[-1])
                 return percent / 100.0
@@ -61,24 +79,39 @@ class LinuxSoundInterface(SoundInterface):
 
     def mute(self) -> None:
         """Mute the system audio."""
-        subprocess.run(
+        completed_process = subprocess.run(
             [str(self._pactl_path), "set-sink-mute", "@DEFAULT_SINK@", "1"],
             check=False,
+            text=True,
         )
+
+        if completed_process.returncode != 0:
+            error_message = f"Failed to mute: {completed_process.stderr}"
+            raise OperationFailedError(error_message)
 
     def unmute(self) -> None:
         """Unmute the system audio."""
-        subprocess.run(
+        completed_process = subprocess.run(
             [str(self._pactl_path), "set-sink-mute", "@DEFAULT_SINK@", "0"],
             check=False,
+            text=True,
         )
+
+        if completed_process.returncode != 0:
+            error_message = f"Failed to unmute: {completed_process.stderr}"
+            raise OperationFailedError(error_message)
 
     def get_mute(self) -> bool:
         """Get the system mute state."""
-        result = subprocess.run(
+        completed_process = subprocess.run(
             [str(self._pactl_path), "get-sink-mute", "@DEFAULT_SINK@"],
             capture_output=True,
             text=True,
             check=False,
         )
-        return "yes" in result.stdout.lower()
+
+        if completed_process.returncode != 0:
+            error_message = f"Failed to get mute state: {completed_process.stderr}"
+            raise OperationFailedError(error_message)
+
+        return "yes" in completed_process.stdout.lower()

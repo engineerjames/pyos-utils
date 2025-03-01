@@ -2,7 +2,8 @@ import shutil
 import subprocess
 from pathlib import Path
 
-from ._exceptions import BackendNotFoundError
+from . import _sound_utilities
+from ._exceptions import BackendNotFoundError, OperationFailedError
 from ._sound_interface import SoundInterface
 
 
@@ -23,32 +24,61 @@ class MacSoundInterface(SoundInterface):
 
     def play_beep(self) -> None:
         """Play a beep sound."""
-        subprocess.run([str(self._osascript_path), "-e", "beep"], check=False)
+        completed_process = subprocess.run(
+            [str(self._osascript_path), "-e", "beep"],
+            check=False,
+            text=True,
+        )
+
+        if completed_process.returncode != 0:
+            error_message = f"Failed to play beep sound: {completed_process.stderr}"
+            raise OperationFailedError(error_message)
 
     def set_volume(self, volume: float) -> None:
         """Set the volume of the sound (0.0 to 1.0)."""
-        # Convert 0-1 range to 0-100
-        volume_int = max(0, min(100, int(volume * 100)))  # Clamp value between 0 and 100
-        subprocess.run([str(self._osascript_path), "-e", f"set volume output volume {volume_int}"], check=False)
+        volume = _sound_utilities.normalize_sound(volume)
+        volume_int = int(volume * 100)  # Clamp value between 0 and 100
+        completed_process = subprocess.run(
+            [str(self._osascript_path), "-e", f"set volume output volume {volume_int}"],
+            check=False,
+            text=True,
+        )
+
+        if completed_process.returncode != 0:
+            error_message = f"Failed to set volume: {completed_process.stderr}"
+            raise OperationFailedError(error_message)
 
     def get_volume(self) -> float:
         """Get the volume of the sound (returns 0.0 to 1.0)."""
-        result = subprocess.run(
+        completed_process = subprocess.run(
             [str(self._osascript_path), "-e", "output volume of (get volume settings)"],
             capture_output=True,
             text=True,
             check=False,
         )
+
+        if completed_process.returncode != 0:
+            error_message = f"Failed to get volume: {completed_process.stderr}"
+            raise OperationFailedError(error_message)
+
         # Convert from 0-100 range to 0-1
-        return float(result.stdout.strip()) / 100
+        return float(completed_process.stdout.strip()) / 100.0
 
     def mute(self) -> None:
-        """Set the mute state of the sound."""
-        subprocess.run([str(self._osascript_path), "-e", "set volume output muted true"], check=False)
+        """Commands a muted state."""
+        subprocess.run(
+            [str(self._osascript_path), "-e", "set volume output muted true"],
+            check=False,
+            text=True,
+        )
 
     def unmute(self) -> None:
-        """Unset the mute state of the sound."""
-        subprocess.run([str(self._osascript_path), "-e", "set volume output muted false"], check=False)
+        """Unset the muted state."""
+        subprocess.run(
+            [str(self._osascript_path), "-e", "set volume output muted false"],
+            check=False,
+            text=True,
+        )
 
     def get_mute(self) -> bool:
         """Get the mute state of the sound."""
