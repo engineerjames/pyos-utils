@@ -1,13 +1,15 @@
 from unittest.mock import MagicMock, patch
 
 import pytest
+from pytest_mock import MockerFixture
 
 from pyos_utils._exceptions import OperationFailedError
 from pyos_utils._sound_mac import MacSoundInterface
 
 
 @pytest.fixture
-def mac_sound_interface() -> MacSoundInterface:
+def mac_sound_interface(mocker: MockerFixture) -> MacSoundInterface:
+    mocker.patch("pathlib.Path.exists", return_value=True)
     return MacSoundInterface()
 
 
