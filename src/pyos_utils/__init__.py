@@ -1,3 +1,3 @@
-from ._exceptions import BackendNotFoundError
+from ._exceptions import BackendNotFoundError, OperationFailedError
 
-__all__ = ["BackendNotFoundError"]
+__all__ = ["BackendNotFoundError", "OperationFailedError"]

@@ -1,7 +1,13 @@
+import sys
+
+if sys.platform != "win32":
+    error_message = "WindowsSoundInterface is only available on Windows"
+    raise NotImplementedError(error_message)
+
 import winsound
 
-from comtypes import CLSCTX_ALL
-from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
+from comtypes import CLSCTX_ALL  # type: ignore[import-not-found]
+from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume  # type: ignore[import-not-found]
 
 from . import _sound_utilities
 from ._exceptions import BackendNotFoundError

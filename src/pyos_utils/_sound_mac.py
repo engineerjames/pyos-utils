@@ -66,26 +66,34 @@ class MacSoundInterface(SoundInterface):
 
     def mute(self) -> None:
         """Commands a muted state."""
-        subprocess.run(
+        completed_process = subprocess.run(
             [str(self._osascript_path), "-e", "set volume output muted true"],
             check=False,
             text=True,
         )
 
+        if completed_process.returncode != 0:
+            error_message = f"Failed to mute sound: {completed_process.stderr}"
+            raise OperationFailedError(error_message)
+
     def unmute(self) -> None:
         """Unset the muted state."""
-        subprocess.run(
+        completed_process = subprocess.run(
             [str(self._osascript_path), "-e", "set volume output muted false"],
             check=False,
             text=True,
         )
 
+        if completed_process.returncode != 0:
+            error_message = f"Failed to unmute sound: {completed_process.stderr}"
+            raise OperationFailedError(error_message)
+
     def get_mute(self) -> bool:
         """Get the mute state of the sound."""
-        result = subprocess.run(
+        completed_process = subprocess.run(
             [str(self._osascript_path), "-e", "output muted of (get volume settings)"],
             capture_output=True,
             text=True,
             check=False,
         )
-        return result.stdout.strip().lower() == "true"
+        return completed_process.stdout.strip().lower() == "true"
