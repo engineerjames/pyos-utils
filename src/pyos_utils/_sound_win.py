@@ -1,33 +1,27 @@
-import sys
-
-if sys.platform != "win32":
-    error_message = "WindowsSoundInterface is only available on Windows"
-    raise NotImplementedError(error_message)
-
-import winsound
-
-from comtypes import CLSCTX_ALL  # type: ignore[import-not-found]
-from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume  # type: ignore[import-not-found]
-
 from . import _sound_utilities
-from ._exceptions import BackendNotFoundError
+from ._exceptions import BackendNotFoundError, OperationFailedError
 from ._sound_interface import SoundInterface
+from .external import comtypes, pycaw, winsound
 
 
 class WindowsSoundInterface(SoundInterface):
     def __init__(self) -> None:
         """Initialize the Windows sound interface using pycaw."""
         try:
-            devices = AudioUtilities.GetSpeakers()
-            interface = devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
-            self._volume = interface.QueryInterface(IAudioEndpointVolume)
+            devices = pycaw.AudioUtilities.GetSpeakers()
+            interface = devices.Activate(pycaw.IAudioEndpointVolume._iid_, comtypes.CLSCTX_ALL, None)
+            self._volume = interface.QueryInterface(pycaw.IAudioEndpointVolume)
         except Exception as e:
             error_msg = f"Failed to initialize Windows audio: {e}"
             raise BackendNotFoundError(error_msg) from e
 
     def play_beep(self) -> None:
         """Play a beep sound using Windows API."""
-        winsound.Beep(1000, 250)  # 1000Hz for 250ms
+        try:
+            winsound.Beep(1000, 250)  # 1000Hz for 250ms
+        except Exception as e:
+            error_msg = f"Failed to play beep sound: {e}"
+            raise OperationFailedError(error_msg) from e
 
     def set_volume(self, volume: float) -> None:
         """Set the system volume (0.0 to 1.0)."""
