@@ -28,7 +28,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         python -m pip install uv
-        uv sync
+        uv sync --all-groups
     - name: Check linters
       run: |
         ruff check .
