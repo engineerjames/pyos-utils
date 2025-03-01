@@ -31,8 +31,8 @@ jobs:
         uv sync --all-groups
     - name: Check linters
       run: |
-        python -m ruff check .
-        python -m mypy .
+        ./.venv/bin/ruff check .
+        ./.venv/bin/mypy .
     - name: Test with pytest
       run: |
         pytest
