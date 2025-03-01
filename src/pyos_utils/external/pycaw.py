@@ -2,7 +2,7 @@ import sys
 from typing import Any
 
 if sys.platform == "win32":
-    import comtypes  # noqa: F401
+    import pycaw  # noqa: F401
 else:
 
     class Volume:  # noqa: D101

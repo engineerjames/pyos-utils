@@ -1,4 +1,4 @@
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import pytest
 from pytest_mock import MockerFixture
@@ -49,69 +49,87 @@ def test_set_volume_out_of_range_min(windows_sound_interface: WindowsSoundInterf
     set_volume_mock.assert_called_once_with(0.0, None)
 
 
-@patch("pyos_utils._sound_windows.pycaw.AudioUtilities")
-def test_set_volume_failure(mock_audio: MagicMock, windows_sound_interface: WindowsSoundInterface) -> None:
-    mock_audio.GetSpeakers.side_effect = RuntimeError("Failed to get speakers")
+def test_set_volume_failure(windows_sound_interface: WindowsSoundInterface, mocker: MockerFixture) -> None:
+    mocker.patch.object(
+        windows_sound_interface._volume,
+        "SetMasterVolumeLevelScalar",
+        side_effect=RuntimeError("Failed to get speakers"),
+    )
     with pytest.raises(OperationFailedError):
         windows_sound_interface.set_volume(0.5)
 
 
-@patch("pyos_utils._sound_windows.pycaw.AudioUtilities")
-def test_get_volume(mock_audio: MagicMock, windows_sound_interface: WindowsSoundInterface) -> None:
-    mock_session = MagicMock()
-    mock_session.SimpleAudioVolume.MasterVolume = 0.5
-    mock_audio.GetSpeakers.return_value = mock_session
+def test_get_volume(windows_sound_interface: WindowsSoundInterface, mocker: MockerFixture) -> None:
+    mocker.patch.object(
+        windows_sound_interface._volume,
+        "GetMasterVolumeLevelScalar",
+        return_value=0.5,
+    )
     volume = windows_sound_interface.get_volume()
     assert volume == 0.5
 
 
-@patch("pyos_utils._sound_windows.pycaw.AudioUtilities")
-def test_get_volume_failure(mock_audio: MagicMock, windows_sound_interface: WindowsSoundInterface) -> None:
-    mock_audio.GetSpeakers.side_effect = RuntimeError("Failed to get speakers")
+def test_get_volume_failure(windows_sound_interface: WindowsSoundInterface, mocker: MockerFixture) -> None:
+    mocker.patch.object(
+        windows_sound_interface._volume,
+        "GetMasterVolumeLevelScalar",
+        side_effect=RuntimeError("Failed to get volume"),
+    )
+
     with pytest.raises(OperationFailedError):
         windows_sound_interface.get_volume()
 
 
-@patch("pyos_utils._sound_windows.pycaw.AudioUtilities")
-def test_mute(mock_audio: MagicMock, windows_sound_interface: WindowsSoundInterface) -> None:
-    mock_session = MagicMock()
-    mock_audio.GetSpeakers.return_value = mock_session
+def test_mute(windows_sound_interface: WindowsSoundInterface, mocker: MockerFixture) -> None:
+    set_mute_mock = mocker.patch.object(windows_sound_interface._volume, "SetMute")
     windows_sound_interface.mute()
-    assert mock_session.SimpleAudioVolume.Mute is True
+    set_mute_mock.assert_called_once_with(1, None)
 
 
-@patch("pyos_utils._sound_windows.pycaw.AudioUtilities")
-def test_mute_failure(mock_audio: MagicMock, windows_sound_interface: WindowsSoundInterface) -> None:
-    mock_audio.GetSpeakers.side_effect = RuntimeError("Failed to get speakers")
+def test_mute_failure(windows_sound_interface: WindowsSoundInterface, mocker: MockerFixture) -> None:
+    mocker.patch.object(
+        windows_sound_interface._volume,
+        "SetMute",
+        side_effect=RuntimeError("Failed to mute"),
+    )
+
     with pytest.raises(OperationFailedError):
         windows_sound_interface.mute()
 
 
-@patch("pyos_utils._sound_windows.pycaw.AudioUtilities")
-def test_unmute(mock_audio: MagicMock, windows_sound_interface: WindowsSoundInterface) -> None:
-    mock_session = MagicMock()
-    mock_audio.GetSpeakers.return_value = mock_session
+def test_unmute(windows_sound_interface: WindowsSoundInterface, mocker: MockerFixture) -> None:
+    set_mute_mock = mocker.patch.object(windows_sound_interface._volume, "SetMute")
     windows_sound_interface.unmute()
-    assert mock_session.SimpleAudioVolume.Mute is False
+
+    set_mute_mock.assert_called_once_with(0, None)
 
 
-@patch("pyos_utils._sound_windows.pycaw.AudioUtilities")
-def test_unmute_failure(mock_audio: MagicMock, windows_sound_interface: WindowsSoundInterface) -> None:
-    mock_audio.GetSpeakers.side_effect = RuntimeError("Failed to get speakers")
+def test_unmute_failure(windows_sound_interface: WindowsSoundInterface, mocker: MockerFixture) -> None:
+    mocker.patch.object(
+        windows_sound_interface._volume,
+        "SetMute",
+        side_effect=RuntimeError("Failed to mute"),
+    )
+
     with pytest.raises(OperationFailedError):
         windows_sound_interface.unmute()
 
 
-@patch("pyos_utils._sound_windows.pycaw.AudioUtilities")
-def test_get_mute(mock_audio: MagicMock, windows_sound_interface: WindowsSoundInterface) -> None:
-    mock_session = MagicMock()
-    mock_session.SimpleAudioVolume.Mute = True
-    mock_audio.GetSpeakers.return_value = mock_session
+def test_get_mute_true(windows_sound_interface: WindowsSoundInterface, mocker: MockerFixture) -> None:
+    mocker.patch.object(windows_sound_interface._volume, "GetMute", return_value=1)
     assert windows_sound_interface.get_mute() is True
 
 
-@patch("pyos_utils._sound_windows.pycaw.AudioUtilities")
-def test_get_mute_failure(mock_audio: MagicMock, windows_sound_interface: WindowsSoundInterface) -> None:
-    mock_audio.GetSpeakers.side_effect = RuntimeError("Failed to get speakers")
+def test_get_mute_false(windows_sound_interface: WindowsSoundInterface, mocker: MockerFixture) -> None:
+    mocker.patch.object(windows_sound_interface._volume, "GetMute", return_value=0)
+    assert windows_sound_interface.get_mute() is False
+
+
+def test_get_mute_failure(windows_sound_interface: WindowsSoundInterface, mocker: MockerFixture) -> None:
+    mocker.patch.object(
+        windows_sound_interface._volume,
+        "GetMute",
+        side_effect=RuntimeError("Failed to mute"),
+    )
     with pytest.raises(OperationFailedError):
         windows_sound_interface.get_mute()

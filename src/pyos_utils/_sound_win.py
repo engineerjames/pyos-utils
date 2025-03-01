@@ -27,21 +27,41 @@ class WindowsSoundInterface(SoundInterface):
         """Set the system volume (0.0 to 1.0)."""
         # pycaw uses a range from -65.25 to 0.0 in dB
         # Convert linear 0-1 to proper dB range
-        volume = _sound_utilities.normalize_sound(volume)
-        self._volume.SetMasterVolumeLevelScalar(volume, None)
+        try:
+            volume = _sound_utilities.normalize_sound(volume)
+            self._volume.SetMasterVolumeLevelScalar(volume, None)
+        except Exception as e:
+            error_msg = f"Failed to set Windows volume: {e}"
+            raise OperationFailedError(error_msg) from e
 
     def get_volume(self) -> float:
         """Get the system volume (returns 0.0 to 1.0)."""
-        return self._volume.GetMasterVolumeLevelScalar()
+        try:
+            return self._volume.GetMasterVolumeLevelScalar()
+        except Exception as e:
+            error_msg = f"Failed to get Windows volume: {e}"
+            raise OperationFailedError(error_msg) from e
 
     def mute(self) -> None:
         """Mute the system audio."""
-        self._volume.SetMute(1, None)
+        try:
+            self._volume.SetMute(1, None)
+        except Exception as e:
+            error_msg = f"Failed to mute Windows audio: {e}"
+            raise OperationFailedError(error_msg) from e
 
     def unmute(self) -> None:
         """Unmute the system audio."""
-        self._volume.SetMute(0, None)
+        try:
+            self._volume.SetMute(0, None)
+        except Exception as e:
+            error_msg = f"Failed to unmute Windows audio: {e}"
+            raise OperationFailedError(error_msg) from e
 
     def get_mute(self) -> bool:
         """Get the system mute state."""
-        return bool(self._volume.GetMute())
+        try:
+            return bool(self._volume.GetMute())
+        except Exception as e:
+            error_msg = f"Failed to get Windows mute state: {e}"
+            raise OperationFailedError(error_msg) from e
