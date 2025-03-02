@@ -1,5 +1,6 @@
 import sys
 
+from ._exceptions import BackendNotFoundError, OperationFailedError
 from ._sound_interface import SoundInterface
 
 if sys.platform == "darwin":
@@ -26,3 +27,5 @@ get_mute = _interface.get_mute
 
 # Type verification
 _impl: SoundInterface = _interface
+
+__all__ = ["BackendNotFoundError", "OperationFailedError"]

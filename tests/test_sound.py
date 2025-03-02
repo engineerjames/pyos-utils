@@ -19,7 +19,7 @@ def test_unsupported_platform() -> None:
 
 def test_sound_interface_exports() -> None:
     from pyos_utils import sound
-    from pyos_utils._sound_interface import SoundInterface
+    from pyos_utils.sound._sound_interface import SoundInterface
 
     # Get all the methods of the SoundInterface as a list of strings:
     methods = [method for method in dir(SoundInterface) if not method.startswith("_")]

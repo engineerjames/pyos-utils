@@ -1,4 +1,4 @@
-from pyos_utils._sound_utilities import normalize_sound
+from pyos_utils.sound._sound_utilities import normalize_sound
 
 
 def test_normalize_sound_within_range() -> None:

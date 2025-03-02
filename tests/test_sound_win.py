@@ -3,8 +3,8 @@ from unittest.mock import MagicMock
 import pytest
 from pytest_mock import MockerFixture
 
-from pyos_utils._exceptions import OperationFailedError
-from pyos_utils._sound_win import WindowsSoundInterface
+from pyos_utils.sound._exceptions import OperationFailedError
+from pyos_utils.sound._sound_win import WindowsSoundInterface
 
 
 @pytest.fixture
@@ -13,19 +13,19 @@ def windows_sound_interface(mocker: MockerFixture) -> WindowsSoundInterface:
     mock_interface = MagicMock()
     mock_interface.QueryInterface.return_value = MagicMock()
 
-    mocker.patch("pyos_utils.external.pycaw.AudioUtilities.GetSpeakers", return_value=mock_devices)
+    mocker.patch("pyos_utils.sound.external.pycaw.AudioUtilities.GetSpeakers", return_value=mock_devices)
 
     return WindowsSoundInterface()
 
 
 def test_play_beep(windows_sound_interface: WindowsSoundInterface, mocker: MockerFixture) -> None:
-    beep_mock = mocker.patch("pyos_utils._sound_win.winsound.Beep")
+    beep_mock = mocker.patch("pyos_utils.sound._sound_win.winsound.Beep")
     windows_sound_interface.play_beep()
     beep_mock.assert_called_once_with(1000, 250)
 
 
 def test_play_beep_failure(windows_sound_interface: WindowsSoundInterface, mocker: MockerFixture) -> None:
-    beep_mock = mocker.patch("pyos_utils._sound_win.winsound.Beep")
+    beep_mock = mocker.patch("pyos_utils.sound._sound_win.winsound.Beep")
     beep_mock.side_effect = RuntimeError("Beep failed")
     with pytest.raises(OperationFailedError):
         windows_sound_interface.play_beep()

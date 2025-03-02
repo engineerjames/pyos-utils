@@ -1,8 +1,8 @@
 import pytest
 from pytest_mock import MockerFixture
 
-from pyos_utils._exceptions import BackendNotFoundError, OperationFailedError
-from pyos_utils._sound_linux import LinuxSoundInterface
+from pyos_utils.sound._exceptions import BackendNotFoundError, OperationFailedError
+from pyos_utils.sound._sound_linux import LinuxSoundInterface
 
 
 @pytest.fixture
