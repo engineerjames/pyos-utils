@@ -115,3 +115,19 @@ class LinuxSoundInterface(SoundInterface):
             raise OperationFailedError(error_message)
 
         return "yes" in completed_process.stdout.lower()
+
+    def play_sound(self, path: Path) -> None:
+        """Play a sound file."""
+        if not path.exists():
+            error_message = f"Sound file not found: {path}"
+            raise FileNotFoundError(error_message)
+
+        completed_process = subprocess.run(
+            [str(self._pactl_path), "play-file", str(path)],
+            check=False,
+            text=True,
+        )
+
+        if completed_process.returncode != 0:
+            error_message = f"Failed to play sound: {completed_process.stderr}"
+            raise OperationFailedError(error_message)

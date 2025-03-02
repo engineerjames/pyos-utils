@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from . import _sound_utilities
 from ._exceptions import BackendNotFoundError, OperationFailedError
 from ._sound_interface import SoundInterface
@@ -64,4 +66,16 @@ class WindowsSoundInterface(SoundInterface):
             return bool(self._volume.GetMute())
         except Exception as e:
             error_msg = f"Failed to get Windows mute state: {e}"
+            raise OperationFailedError(error_msg) from e
+
+    def play_sound(self, path: Path) -> None:
+        """Play a sound file."""
+        if not path.exists():
+            error_msg = f"Sound file not found: {path}"
+            raise FileNotFoundError(error_msg)
+
+        try:
+            winsound.PlaySound(str(path), winsound.SND_FILENAME | winsound.SND_ASYNC)
+        except Exception as e:
+            error_msg = f"Failed to play sound file: {e}"
             raise OperationFailedError(error_msg) from e

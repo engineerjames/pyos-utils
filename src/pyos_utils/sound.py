@@ -15,8 +15,9 @@ else:
 # Create singleton instance
 _interface = _PlatformSoundInterface()
 
-# Export the interface methods: TODO -- Add a test to ensure all methods are exported
+# Export the interface methods:
 play_beep = _interface.play_beep
+play_sound = _interface.play_sound
 set_volume = _interface.set_volume
 get_volume = _interface.get_volume
 mute = _interface.mute

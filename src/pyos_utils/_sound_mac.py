@@ -97,3 +97,19 @@ class MacSoundInterface(SoundInterface):
             check=False,
         )
         return completed_process.stdout.strip().lower() == "true"
+
+    def play_sound(self, path: Path) -> None:
+        """Play a sound file."""
+        if not path.exists():
+            error_message = f"Sound file not found: {path}"
+            raise FileNotFoundError(error_message)
+
+        completed_process = subprocess.run(
+            [str(self._osascript_path), "-e", f'play sound "{path}"'],
+            check=False,
+            text=True,
+        )
+
+        if completed_process.returncode != 0:
+            error_message = f"Failed to play sound: {completed_process.stderr}"
+            raise OperationFailedError(error_message)

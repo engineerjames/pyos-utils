@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Protocol
 
 
@@ -24,4 +25,8 @@ class SoundInterface(Protocol):
 
     def get_mute(self) -> bool:
         """Get the mute state of the sound."""
+        ...
+
+    def play_sound(self, path: Path) -> None:
+        """Play a sound file."""
         ...
