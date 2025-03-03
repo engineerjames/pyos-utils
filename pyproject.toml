@@ -9,6 +9,7 @@ authors = [
 requires-python = ">=3.11"
 dependencies = [
     "pycaw; sys_platform == 'win32'",
+    "pyobjc-framework-Cocoa; sys_platform == 'darwin'",
 ]
 
 [build-system]
@@ -29,6 +30,10 @@ strict = true                # Enable strict mode for maximum type checking
 disallow_untyped_defs = true # Disallow functions and methods without type annotations
 warn_unused_ignores = true   # Warn about unused # type: ignore comments
 no_implicit_optional = true  # Don't assume that variables can be None unless explicitly annotated
+
+[[tool.mypy.overrides]]
+module = "AppKit"
+ignore_missing_imports = true
 
 
 [tool.ruff.lint.per-file-ignores]

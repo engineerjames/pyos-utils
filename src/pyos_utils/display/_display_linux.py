@@ -7,7 +7,7 @@ class LinuxDisplayInterface(DisplayInterface):
     def get_info(self) -> str:
         """Get the display information."""
         completed_process = subprocess.run(
-            ["xrandr"],
+            ["xrandr"],  # noqa: S607
             capture_output=True,
             text=True,
             check=True,

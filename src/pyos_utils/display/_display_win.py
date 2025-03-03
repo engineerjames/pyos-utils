@@ -7,7 +7,7 @@ class WindowsDisplayInterface(DisplayInterface):
     def get_info(self) -> str:
         """Get the display information."""
         completed_process = subprocess.run(
-            ["wmic", "path", "Win32_VideoController", "get", "Name"],
+            ["wmic", "path", "Win32_VideoController", "get", "Name"],  # noqa: S607
             capture_output=True,
             text=True,
             check=True,
