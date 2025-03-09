@@ -14,4 +14,4 @@ class LinuxDisplayInterface(DisplayInterface):
             check=True,
         )
 
-        return [DisplayInfo(0, 0, 0)]
+        return [DisplayInfo(0, 0, 0, 0)]

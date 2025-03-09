@@ -14,7 +14,8 @@ class MacDisplayInterface(DisplayInterface):
             height = rect.size.height
             desc = s.deviceDescription()
             depth = desc["NSDeviceBitsPerSample"]
-            display = DisplayInfo(width, height, depth)
+            fps = s.maximumFramesPerSecond()
+            display = DisplayInfo(width, height, depth, fps)
             displays.append(display)
 
         return displays
