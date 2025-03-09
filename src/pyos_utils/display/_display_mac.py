@@ -1,12 +1,20 @@
 from AppKit import NSScreen
 
+from pyos_utils.display._display_info import DisplayInfo
 from pyos_utils.display._display_interface import DisplayInterface
 
 
 class MacDisplayInterface(DisplayInterface):
-    def get_info(self) -> str:
+    def get_info(self) -> list[DisplayInfo]:
         """Get the display information."""
-        rect = NSScreen.mainScreen().frame()
-        width = rect.size.width
-        height = rect.size.height
-        return f"Width: {width}, Height: {height}"
+        displays = []
+        for s in NSScreen.screens():
+            rect = s.frame()
+            width = rect.size.width
+            height = rect.size.height
+            desc = s.deviceDescription()
+            depth = desc["NSDeviceBitsPerSample"]
+            display = DisplayInfo(width, height, depth)
+            displays.append(display)
+
+        return displays
