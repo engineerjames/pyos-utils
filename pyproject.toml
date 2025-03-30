@@ -20,14 +20,14 @@ dev = [
 ]
 
 [tool.pyright]
-typeCheckingMode = "strict"                                 # Enable strict type checking
-reportUnusedVariable = true                                 # Report unused variables
-reportUnusedImport = true                                   # Report unused imports
-reportOptionalSubscript = false                             # Allow optional subscript without error
-reportOptionalMemberAccess = false                          # Allow optional member access without error
-reportPrivateUsage = false                                  # Allow private usage without error
-include = ["src", "tests"]                                  # Include the pyos_utils and tests directories
-exclude = ["**/node_modules", "**/__pycache__", ".venv/**"]
+typeCheckingMode = "strict"                                          # Enable strict type checking
+reportUnusedVariable = true                                          # Report unused variables
+reportUnusedImport = true                                            # Report unused imports
+reportOptionalSubscript = false                                      # Allow optional subscript without error
+reportOptionalMemberAccess = false                                   # Allow optional member access without error
+reportPrivateUsage = false                                           # Allow private usage without error
+include = ["src"]                                                    # Include the pyos_utils and tests directories
+exclude = ["**/node_modules", "**/__pycache__", ".venv/**", "tests"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*.py" = [
