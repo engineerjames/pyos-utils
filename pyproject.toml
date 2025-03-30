@@ -18,13 +18,16 @@ dev = [
     "pytest-mock>=3.14.0",
     "ruff>=0.9.7",
 ]
-[tool.pyright]
-typeCheckingMode = "strict"        # Enable strict type checking
-reportUnusedVariable = true        # Report unused variables
-reportUnusedImport = true          # Report unused imports
-reportOptionalSubscript = false    # Allow optional subscript without error
-reportOptionalMemberAccess = false # Allow optional member access without error
 
+[tool.pyright]
+typeCheckingMode = "strict"                                 # Enable strict type checking
+reportUnusedVariable = true                                 # Report unused variables
+reportUnusedImport = true                                   # Report unused imports
+reportOptionalSubscript = false                             # Allow optional subscript without error
+reportOptionalMemberAccess = false                          # Allow optional member access without error
+reportPrivateUsage = false                                  # Allow private usage without error
+include = ["src", "tests"]                                  # Include the pyos_utils and tests directories
+exclude = ["**/node_modules", "**/__pycache__", ".venv/**"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*.py" = [
@@ -55,8 +58,10 @@ ignore = [
     "FIX002",
     "D211",
     "S603",
+    "F401",
     "D104",
     "D100",
+    "D101",
 ]
 
 select = [

@@ -9,10 +9,12 @@
     },
   },
   "python.testing.pytestArgs": ["tests"],
-  "python.analysis.typeCheckingMode": "strict",
   "python.testing.unittestEnabled": false,
+  "python.languageServer": "Pylance",
   "python.testing.pytestEnabled": true,
   "[toml]": {
     "editor.defaultFormatter": "tamasfe.even-better-toml"
-  }
+  },
+  "python.analysis.languageServerMode": "full",
+  "python.analysis.diagnosticMode": "workspace",
 }

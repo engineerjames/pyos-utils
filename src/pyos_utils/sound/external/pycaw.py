@@ -2,7 +2,7 @@ import sys
 from typing import Any
 
 if sys.platform == "win32":
-    from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume  # noqa: F401 # type: ignore[reportUnusedImport]
+    from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume  # type: ignore[reportUnusedImport]
 else:
 
     class Volume:
