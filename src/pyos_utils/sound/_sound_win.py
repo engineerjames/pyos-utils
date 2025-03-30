@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Any
 
 from . import _sound_utilities
 from ._exceptions import BackendNotFoundError, OperationFailedError
@@ -10,8 +11,8 @@ class WindowsSoundInterface(SoundInterface):
     def __init__(self) -> None:
         """Initialize the Windows sound interface using pycaw."""
         try:
-            devices = pycaw.AudioUtilities.GetSpeakers()
-            interface = devices.Activate(pycaw.IAudioEndpointVolume._iid_, comtypes.CLSCTX_ALL, None)
+            devices: Any = pycaw.AudioUtilities.GetSpeakers()
+            interface = devices.Activate(pycaw.IAudioEndpointVolume._iid_, comtypes.CLSCTX_ALL, None)  # type:ignore[reportPrivateUsage]
             self._volume = interface.QueryInterface(pycaw.IAudioEndpointVolume)
         except Exception as e:
             error_msg = f"Failed to initialize Windows audio: {e}"

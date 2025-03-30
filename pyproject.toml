@@ -3,13 +3,9 @@ name = "pyos-utils"
 version = "0.1.0"
 description = "Python utilities for working with the operating system."
 readme = "README.md"
-authors = [
-    { name = "James Armes", email = "jamesleearmes@gmail.com" }
-]
+authors = [{ name = "James Armes", email = "jamesleearmes@gmail.com" }]
 requires-python = ">=3.11"
-dependencies = [
-    "pycaw; sys_platform == 'win32'",
-]
+dependencies = ["pycaw; sys_platform == 'win32'"]
 
 [build-system]
 requires = ["hatchling"]
@@ -17,22 +13,33 @@ build-backend = "hatchling.build"
 
 [dependency-groups]
 dev = [
-    "mypy>=1.15.0",
+    "pyright>=1.1.398",
     "pytest>=8.3.4",
     "pytest-mock>=3.14.0",
     "ruff>=0.9.7",
 ]
-
-[tool.mypy]
-# Global options
-strict = true                # Enable strict mode for maximum type checking
-disallow_untyped_defs = true # Disallow functions and methods without type annotations
-warn_unused_ignores = true   # Warn about unused # type: ignore comments
-no_implicit_optional = true  # Don't assume that variables can be None unless explicitly annotated
+[tool.pyright]
+typeCheckingMode = "strict"        # Enable strict type checking
+reportUnusedVariable = true        # Report unused variables
+reportUnusedImport = true          # Report unused imports
+reportOptionalSubscript = false    # Allow optional subscript without error
+reportOptionalMemberAccess = false # Allow optional member access without error
 
 
 [tool.ruff.lint.per-file-ignores]
-"tests/*.py" = ["S101", "D101","D102", "D103", "D107", "SLF001", "FBT003", "D100", "PLR2004", "S108", "T201"]
+"tests/*.py" = [
+    "S101",
+    "D101",
+    "D102",
+    "D103",
+    "D107",
+    "SLF001",
+    "FBT003",
+    "D100",
+    "PLR2004",
+    "S108",
+    "T201",
+]
 
 [tool.ruff]
 line-length = 120
@@ -57,6 +64,6 @@ select = [
 ]
 
 [tool.pytest.ini_options]
-    log_cli = true 
-    log_cli_level = "INFO" 
-    pythonpath = ["."]
+log_cli = true
+log_cli_level = "INFO"
+pythonpath = ["."]
