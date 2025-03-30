@@ -7,14 +7,36 @@ from pyos_utils.display._display_interface import DisplayInterface
 class WindowsDisplayInterface(DisplayInterface):
     def get_info(self) -> list[DisplayInfo]:
         """Get the display information."""
-        _ = subprocess.run(
-            ["wmic", "path", "Win32_VideoController", "get", "Name"],  # noqa: S607
+        output = subprocess.run(
+            [  # noqa: S607
+                "wmic",
+                "path",
+                "Win32_VideoController",
+                "get",
+                "VideoModeDescription,VideoProcessor,MaxRefreshRate,MinRefreshRate,DeviceID",
+            ],
             capture_output=True,
             text=True,
             check=True,
         )
 
-        return [DisplayInfo(0, 0, 0, 0)]
+        # Parse the output and return a list of DisplayInfo objects
+
+        # Extract the display information from the output
+        display_info: list[DisplayInfo] = []
+        for line in output.stdout.split("\n"):
+            if line.strip():
+                parts = line.split()
+                if len(parts) >= 5:
+                    display_info.append(
+                        DisplayInfo(
+                            width=int(parts[0]),
+                            height=int(parts[1]),
+                            depth=int(parts[2]),
+                            fps=int(parts[3]),
+                        )
+                    )
+        return display_info
 
 
 # wmic path Win32_VideoController get VideoModeDescription,VideoProcessor,MaxRefreshRate,MinRefreshRate,DeviceID
