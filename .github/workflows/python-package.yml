@@ -33,7 +33,7 @@ jobs:
     - name: Check linters
       run: |
         ./.venv/bin/ruff check .
-        ./.venv/bin/mypy .
+        ./.venv/bin/pyright .
     - name: Test with pytest
       run: |
         ./.venv/bin/pytest

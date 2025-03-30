@@ -6,12 +6,15 @@
     "editor.defaultFormatter": "charliermarsh.ruff",
     "editor.codeActionsOnSave": {
       "source.organizeImports": "always"
-    }
+    },
   },
   "python.testing.pytestArgs": ["tests"],
   "python.testing.unittestEnabled": false,
+  "python.languageServer": "Pylance",
   "python.testing.pytestEnabled": true,
   "[toml]": {
     "editor.defaultFormatter": "tamasfe.even-better-toml"
-  }
+  },
+  "python.analysis.languageServerMode": "full",
+  "python.analysis.diagnosticMode": "workspace",
 }
