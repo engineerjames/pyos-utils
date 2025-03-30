@@ -1,6 +1,7 @@
 import shutil
 import subprocess
 from pathlib import Path
+from typing import Optional
 
 from . import _sound_utilities
 from ._exceptions import BackendNotFoundError, OperationFailedError
@@ -11,7 +12,7 @@ class LinuxSoundInterface(SoundInterface):
     def __init__(self) -> None:
         """Initialize the Linux sound interface using pactl."""
         self._pactl_path = Path("/usr/bin/pactl").resolve()
-        self._beep_path: Path | None = Path("/usr/bin/beep").resolve()
+        self._beep_path: Optional[Path] = Path("/usr/bin/beep").resolve()  # noqa: UP007
 
         if not self._pactl_path.exists():
             pactl_str = shutil.which("pactl")

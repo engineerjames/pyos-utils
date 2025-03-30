@@ -1,7 +1,7 @@
 import sys  # noqa: A005
 
 if sys.platform == "win32":
-    import winsound  # noqa: F401
+    from winsound import SND_ASYNC, SND_FILENAME, Beep, PlaySound  # type: ignore[reportUnusedImport]
 else:
 
     def Beep(frequency: int, duration: int) -> None:  # noqa: D103, N802
