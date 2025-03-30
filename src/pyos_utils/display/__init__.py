@@ -5,7 +5,7 @@ from ._display_interface import DisplayInterface
 if sys.platform == "darwin":
     from ._display_mac import MacDisplayInterface as _PlatformDisplayInterface
 elif sys.platform == "win32":
-    from ._display_win import WindowsSoundInterface as _PlatformDisplayInterface
+    from ._display_win import WindowsDisplayInterface as _PlatformDisplayInterface
 elif sys.platform == "linux":
     from ._display_linux import LinuxDisplayInterface as _PlatformDisplayInterface
 else:
