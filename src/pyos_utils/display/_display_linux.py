@@ -14,4 +14,4 @@ class LinuxDisplayInterface(DisplayInterface):
             check=True,
         )
 
-        return [DisplayInfo(0, 0, 0, 0)]
+        return [DisplayInfo(name="Linux Display", width=1920, height=1080, depth=24, fps=60)]
