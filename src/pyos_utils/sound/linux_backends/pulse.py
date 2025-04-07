@@ -8,9 +8,11 @@ from pyos_utils.sound._sound_interface import SoundInterface
 
 
 class PulseAudioInterface(SoundInterface):
-    def __init__(self, path_to_ctl: Path) -> None:
+    def __init__(self, path_to_ctl: Path = Path("/usr/bin/pactl")) -> None:
         """Initialize the Linux sound interface."""
         self._pactl_path = path_to_ctl
+
+        # Beep is used for playing a beep sound
         self._beep_path = shutil.which("beep")
 
     def play_beep(self) -> None:
@@ -23,6 +25,7 @@ class PulseAudioInterface(SoundInterface):
             [str(self._beep_path), "-f", "1000", "-l", "250"],
             check=False,
             text=True,
+            capture_output=True,
         )
 
         if completed_process.returncode != 0:
@@ -37,6 +40,7 @@ class PulseAudioInterface(SoundInterface):
             [str(self._pactl_path), "set-sink-volume", "@DEFAULT_SINK@", f"{volume_percent}%"],
             check=False,
             text=True,
+            capture_output=True,
         )
 
         if completed_process.returncode != 0:
@@ -70,6 +74,7 @@ class PulseAudioInterface(SoundInterface):
             [str(self._pactl_path), "set-sink-mute", "@DEFAULT_SINK@", "1"],
             check=False,
             text=True,
+            capture_output=True,
         )
 
         if completed_process.returncode != 0:
@@ -82,6 +87,7 @@ class PulseAudioInterface(SoundInterface):
             [str(self._pactl_path), "set-sink-mute", "@DEFAULT_SINK@", "0"],
             check=False,
             text=True,
+            capture_output=True,
         )
 
         if completed_process.returncode != 0:
@@ -92,9 +98,9 @@ class PulseAudioInterface(SoundInterface):
         """Get the system mute state."""
         completed_process = subprocess.run(
             [str(self._pactl_path), "get-sink-mute", "@DEFAULT_SINK@"],
-            capture_output=True,
             text=True,
             check=False,
+            capture_output=True,
         )
 
         if completed_process.returncode != 0:
@@ -113,6 +119,7 @@ class PulseAudioInterface(SoundInterface):
             [str(self._pactl_path), "play-file", str(path)],
             check=False,
             text=True,
+            capture_output=True,
         )
 
         if completed_process.returncode != 0:

@@ -1,24 +1,17 @@
 import pytest
 from pytest_mock import MockerFixture
 
-from pyos_utils.sound._exceptions import BackendNotFoundError, OperationFailedError
-from pyos_utils.sound._sound_linux import LinuxSoundInterface
+from pyos_utils.sound._exceptions import OperationFailedError
+from pyos_utils.sound.linux_backends.pulse import PulseAudioInterface
 
 
 @pytest.fixture
-def linux_sound_interface(mocker: MockerFixture) -> LinuxSoundInterface:
+def linux_sound_interface(mocker: MockerFixture) -> PulseAudioInterface:
     mocker.patch("pathlib.Path.exists", return_value=True)
-    return LinuxSoundInterface()
+    return PulseAudioInterface()
 
 
-def test_init_pactl_not_found(mocker: MockerFixture) -> None:
-    mocker.patch("pathlib.Path.exists", return_value=False)
-    mocker.patch("shutil.which", return_value=None)
-    with pytest.raises(BackendNotFoundError, match="pactl not found"):
-        LinuxSoundInterface()
-
-
-def test_play_beep(mocker: MockerFixture, linux_sound_interface: LinuxSoundInterface) -> None:
+def test_play_beep(mocker: MockerFixture, linux_sound_interface: PulseAudioInterface) -> None:
     mock_run = mocker.patch("subprocess.run")
     mock_run.return_value.returncode = 0
     linux_sound_interface.play_beep()
@@ -26,10 +19,11 @@ def test_play_beep(mocker: MockerFixture, linux_sound_interface: LinuxSoundInter
         [str(linux_sound_interface._beep_path), "-f", "1000", "-l", "250"],
         check=False,
         text=True,
+        capture_output=True,
     )
 
 
-def test_play_beep_failure(mocker: MockerFixture, linux_sound_interface: LinuxSoundInterface) -> None:
+def test_play_beep_failure(mocker: MockerFixture, linux_sound_interface: PulseAudioInterface) -> None:
     mock_run = mocker.patch("subprocess.run")
     mock_run.return_value.returncode = 1
     mock_run.return_value.stderr = "error"
@@ -37,7 +31,7 @@ def test_play_beep_failure(mocker: MockerFixture, linux_sound_interface: LinuxSo
         linux_sound_interface.play_beep()
 
 
-def test_set_volume(mocker: MockerFixture, linux_sound_interface: LinuxSoundInterface) -> None:
+def test_set_volume(mocker: MockerFixture, linux_sound_interface: PulseAudioInterface) -> None:
     mock_run = mocker.patch("subprocess.run")
     mock_run.return_value.returncode = 0
     linux_sound_interface.set_volume(0.5)
@@ -45,10 +39,11 @@ def test_set_volume(mocker: MockerFixture, linux_sound_interface: LinuxSoundInte
         [str(linux_sound_interface._pactl_path), "set-sink-volume", "@DEFAULT_SINK@", "50%"],
         check=False,
         text=True,
+        capture_output=True,
     )
 
 
-def test_set_volume_failure(mocker: MockerFixture, linux_sound_interface: LinuxSoundInterface) -> None:
+def test_set_volume_failure(mocker: MockerFixture, linux_sound_interface: PulseAudioInterface) -> None:
     mock_run = mocker.patch("subprocess.run")
     mock_run.return_value.returncode = 1
     mock_run.return_value.stderr = "error"
@@ -56,7 +51,7 @@ def test_set_volume_failure(mocker: MockerFixture, linux_sound_interface: LinuxS
         linux_sound_interface.set_volume(0.5)
 
 
-def test_get_volume(mocker: MockerFixture, linux_sound_interface: LinuxSoundInterface) -> None:
+def test_get_volume(mocker: MockerFixture, linux_sound_interface: PulseAudioInterface) -> None:
     mock_run = mocker.patch("subprocess.run")
     mock_run.return_value.returncode = 0
     mock_run.return_value.stdout = "Volume: front-left: 65536 / 50% / -0.00 dB"
@@ -70,7 +65,7 @@ def test_get_volume(mocker: MockerFixture, linux_sound_interface: LinuxSoundInte
     )
 
 
-def test_get_volume_failure(mocker: MockerFixture, linux_sound_interface: LinuxSoundInterface) -> None:
+def test_get_volume_failure(mocker: MockerFixture, linux_sound_interface: PulseAudioInterface) -> None:
     mock_run = mocker.patch("subprocess.run")
     mock_run.return_value.returncode = 1
     mock_run.return_value.stderr = "error"
@@ -78,7 +73,7 @@ def test_get_volume_failure(mocker: MockerFixture, linux_sound_interface: LinuxS
         linux_sound_interface.get_volume()
 
 
-def test_mute(mocker: MockerFixture, linux_sound_interface: LinuxSoundInterface) -> None:
+def test_mute(mocker: MockerFixture, linux_sound_interface: PulseAudioInterface) -> None:
     mock_run = mocker.patch("subprocess.run")
     mock_run.return_value.returncode = 0
     linux_sound_interface.mute()
@@ -86,10 +81,11 @@ def test_mute(mocker: MockerFixture, linux_sound_interface: LinuxSoundInterface)
         [str(linux_sound_interface._pactl_path), "set-sink-mute", "@DEFAULT_SINK@", "1"],
         check=False,
         text=True,
+        capture_output=True,
     )
 
 
-def test_mute_failure(mocker: MockerFixture, linux_sound_interface: LinuxSoundInterface) -> None:
+def test_mute_failure(mocker: MockerFixture, linux_sound_interface: PulseAudioInterface) -> None:
     mock_run = mocker.patch("subprocess.run")
     mock_run.return_value.returncode = 1
     mock_run.return_value.stderr = "error"
@@ -97,7 +93,7 @@ def test_mute_failure(mocker: MockerFixture, linux_sound_interface: LinuxSoundIn
         linux_sound_interface.mute()
 
 
-def test_unmute(mocker: MockerFixture, linux_sound_interface: LinuxSoundInterface) -> None:
+def test_unmute(mocker: MockerFixture, linux_sound_interface: PulseAudioInterface) -> None:
     mock_run = mocker.patch("subprocess.run")
     mock_run.return_value.returncode = 0
     linux_sound_interface.unmute()
@@ -105,10 +101,11 @@ def test_unmute(mocker: MockerFixture, linux_sound_interface: LinuxSoundInterfac
         [str(linux_sound_interface._pactl_path), "set-sink-mute", "@DEFAULT_SINK@", "0"],
         check=False,
         text=True,
+        capture_output=True,
     )
 
 
-def test_unmute_failure(mocker: MockerFixture, linux_sound_interface: LinuxSoundInterface) -> None:
+def test_unmute_failure(mocker: MockerFixture, linux_sound_interface: PulseAudioInterface) -> None:
     mock_run = mocker.patch("subprocess.run")
     mock_run.return_value.returncode = 1
     mock_run.return_value.stderr = "error"
@@ -116,7 +113,7 @@ def test_unmute_failure(mocker: MockerFixture, linux_sound_interface: LinuxSound
         linux_sound_interface.unmute()
 
 
-def test_get_mute_true(mocker: MockerFixture, linux_sound_interface: LinuxSoundInterface) -> None:
+def test_get_mute_true(mocker: MockerFixture, linux_sound_interface: PulseAudioInterface) -> None:
     mock_run = mocker.patch("subprocess.run")
     mock_run.return_value.returncode = 0
     mock_run.return_value.stdout = "Mute: yes"
@@ -129,14 +126,14 @@ def test_get_mute_true(mocker: MockerFixture, linux_sound_interface: LinuxSoundI
     )
 
 
-def test_get_mute_false(mocker: MockerFixture, linux_sound_interface: LinuxSoundInterface) -> None:
+def test_get_mute_false(mocker: MockerFixture, linux_sound_interface: PulseAudioInterface) -> None:
     mock_run = mocker.patch("subprocess.run")
     mock_run.return_value.returncode = 0
     mock_run.return_value.stdout = "Mute: no"
     assert linux_sound_interface.get_mute() is False
 
 
-def test_get_mute_failure(mocker: MockerFixture, linux_sound_interface: LinuxSoundInterface) -> None:
+def test_get_mute_failure(mocker: MockerFixture, linux_sound_interface: PulseAudioInterface) -> None:
     mock_run = mocker.patch("subprocess.run")
     mock_run.return_value.returncode = 1
     mock_run.return_value.stderr = "error"
