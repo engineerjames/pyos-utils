@@ -1,10 +1,18 @@
-from unittest.mock import MagicMock
+import sys
+from collections.abc import Generator
+from unittest.mock import MagicMock, patch
 
 import pytest
 from pytest_mock import MockerFixture
 
 from pyos_utils.sound._exceptions import OperationFailedError
 from pyos_utils.sound._sound_win import WindowsSoundInterface
+
+
+@pytest.fixture(autouse=True)
+def mock_platform() -> Generator[None, None, None]:
+    with patch.object(sys, "platform", "win32"):
+        yield
 
 
 @pytest.fixture

@@ -1,3 +1,5 @@
+import sys
+from collections.abc import Generator
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -5,6 +7,12 @@ from pytest_mock import MockerFixture
 
 from pyos_utils.sound._exceptions import OperationFailedError
 from pyos_utils.sound._sound_mac import MacSoundInterface
+
+
+@pytest.fixture(autouse=True)
+def mock_platform() -> Generator[None, None, None]:
+    with patch.object(sys, "platform", "darwin"):
+        yield
 
 
 @pytest.fixture
