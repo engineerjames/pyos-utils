@@ -4,7 +4,7 @@ from unittest.mock import patch
 import pytest
 
 patch("pyos_utils.sound._factory.SoundInterfaceFactory.create_interface")
-patch("pyos_utils.sound._sound_linux.Backend._detect_backend")
+patch("pyos_utils.sound._sound_linux.Backend.get_interface")
 
 from pyos_utils.sound._factory import SoundInterfaceFactory  # noqa: E402
 from pyos_utils.sound._sound_linux import Backend, LinuxSoundInterface  # noqa: E402
