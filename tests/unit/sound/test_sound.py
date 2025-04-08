@@ -3,14 +3,11 @@ from unittest.mock import patch
 
 import pytest
 
-patch("pyos_utils.sound._factory.SoundInterfaceFactory.create_interface")
-patch("pyos_utils.sound._sound_linux.Backend.get_interface")
-
-from pyos_utils.sound import _interface  # noqa: E402
+from pyos_utils.sound._factory import SoundInterfaceFactory
 
 
 def test_sound_interface_exists() -> None:
-    assert _interface is not None
+    assert SoundInterfaceFactory.create_interface("linux") is not None
 
 
 def test_unsupported_platform() -> None:
