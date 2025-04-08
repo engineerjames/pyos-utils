@@ -25,8 +25,10 @@ def test_create_interface_mac() -> None:
     from pyos_utils.sound._factory import SoundInterfaceFactory
     from pyos_utils.sound._sound_mac import MacSoundInterface
 
-    interface = SoundInterfaceFactory.create_interface("darwin")
-    assert isinstance(interface, MacSoundInterface)
+    # Mock shutil.which to return a valid path
+    with patch("shutil.which", return_value="/usr/bin/osascript"), patch("pathlib.Path.exists", return_value=True):
+        interface = SoundInterfaceFactory.create_interface("darwin")
+        assert isinstance(interface, MacSoundInterface)
 
 
 def test_create_interface_windows() -> None:
