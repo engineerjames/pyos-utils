@@ -7,7 +7,7 @@ from pyos_utils.sound._factory import SoundInterfaceFactory
 
 
 def test_sound_interface_exists() -> None:
-    assert SoundInterfaceFactory.create_interface("linux") is not None
+    assert SoundInterfaceFactory.create_interface("win32") is not None
 
 
 def test_unsupported_platform() -> None:
