@@ -5,14 +5,7 @@ from unittest.mock import Mock, patch
 import pytest
 
 from pyos_utils.sound._exceptions import OperationFailedError
-from pyos_utils.sound._sound_linux import Backend
 from pyos_utils.sound.linux_backends.pulse import PulseAudioInterface
-
-
-@pytest.fixture(autouse=True)
-def mock_backend_detection() -> Generator[None, None, None]:
-    with patch("pyos_utils.sound._sound_linux.Backend._detect_backend", return_value=Backend.PULSE):
-        yield
 
 
 @pytest.fixture

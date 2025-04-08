@@ -1,20 +1,10 @@
 import sys
 
 from ._exceptions import BackendNotFoundError, OperationFailedError
-from ._sound_interface import SoundInterface
+from ._factory import SoundInterfaceFactory
 
-if sys.platform == "darwin":
-    from ._sound_mac import MacSoundInterface as _PlatformSoundInterface
-elif sys.platform == "win32":
-    from ._sound_win import WindowsSoundInterface as _PlatformSoundInterface
-elif sys.platform == "linux":
-    from ._sound_linux import LinuxSoundInterface as _PlatformSoundInterface
-else:
-    msg = f"Platform {sys.platform} is not supported"
-    raise NotImplementedError(msg)
-
-# Create singleton instance
-_interface = _PlatformSoundInterface()
+# Create singleton instance using factory
+_interface = SoundInterfaceFactory.create_interface(sys.platform)
 
 # Export the interface methods:
 play_beep = _interface.play_beep
@@ -25,7 +15,14 @@ mute = _interface.mute
 unmute = _interface.unmute
 get_mute = _interface.get_mute
 
-# Type verification
-_impl: SoundInterface = _interface
-
-__all__ = ["BackendNotFoundError", "OperationFailedError"]
+__all__ = [
+    "BackendNotFoundError",
+    "OperationFailedError",
+    "get_mute",
+    "get_volume",
+    "mute",
+    "play_beep",
+    "play_sound",
+    "set_volume",
+    "unmute",
+]
