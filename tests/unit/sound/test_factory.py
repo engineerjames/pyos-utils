@@ -4,7 +4,7 @@ from unittest.mock import patch
 import pytest
 
 patch("pyos_utils.sound._factory.SoundInterfaceFactory.create_interface")
-patch("pyos_utils.sound._sound_linux.Backend._detect_backend", return_value=("wireplumber", "/usr/bin/wpctl"))
+patch("Backend._detect_backend", return_value=("wireplumber", "/usr/bin/wpctl"))
 
 from pyos_utils.sound._factory import SoundInterfaceFactory  # noqa: E402
 from pyos_utils.sound._sound_linux import Backend, LinuxSoundInterface  # noqa: E402
