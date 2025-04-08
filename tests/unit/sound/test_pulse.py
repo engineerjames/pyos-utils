@@ -1,19 +1,18 @@
 from collections.abc import Generator
 from pathlib import Path
+from typing import TYPE_CHECKING
 from unittest.mock import Mock, patch
 
 import pytest
 
-from pyos_utils.sound._sound_linux import LinuxSoundInterface
-
-patch("pyos_utils.sound._factory.SoundInterfaceFactory.create_interface", return_value=LinuxSoundInterface)
-
-from pyos_utils.sound._exceptions import OperationFailedError  # noqa: E402
-from pyos_utils.sound.linux_backends.pulse import PulseAudioInterface  # noqa: E402
+if TYPE_CHECKING:
+    from pyos_utils.sound._sound_linux import PulseAudioInterface  # noqa: TC004
 
 
 @pytest.fixture
 def pulse_interface() -> PulseAudioInterface:
+    from pyos_utils.sound._sound_linux import PulseAudioInterface
+
     return PulseAudioInterface(Path("/usr/bin/pactl"))
 
 
@@ -52,6 +51,8 @@ def test_set_volume_success(pulse_interface: PulseAudioInterface, mock_subproces
 
 
 def test_set_volume_failure(pulse_interface: PulseAudioInterface, mock_subprocess_run: Mock) -> None:
+    from pyos_utils.sound._exceptions import OperationFailedError
+
     mock_subprocess_run.return_value.returncode = 1
     mock_subprocess_run.return_value.stderr = "Error setting volume"
     with pytest.raises(OperationFailedError):
@@ -64,6 +65,8 @@ def test_get_volume_success(pulse_interface: PulseAudioInterface, mock_subproces
 
 
 def test_get_volume_failure(pulse_interface: PulseAudioInterface, mock_subprocess_run: Mock) -> None:
+    from pyos_utils.sound._exceptions import OperationFailedError
+
     mock_subprocess_run.return_value.returncode = 1
     mock_subprocess_run.return_value.stderr = "Error getting volume"
     with pytest.raises(OperationFailedError):
