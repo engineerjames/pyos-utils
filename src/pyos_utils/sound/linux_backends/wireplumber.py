@@ -16,6 +16,10 @@ class WirePlumberInterface(SoundInterface):
 
     def play_beep(self) -> None:
         """Play a beep sound using system beep."""
+        if self._beep_path is None:
+            error_message = "Beep command not found. Please install beep."
+            raise FileNotFoundError(error_message)
+
         completed_process = subprocess.run(
             [str(self._beep_path), "-f", "1000", "-l", "250"],
             check=False,

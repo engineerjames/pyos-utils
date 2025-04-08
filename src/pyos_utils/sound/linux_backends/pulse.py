@@ -11,11 +11,14 @@ class PulseAudioInterface(SoundInterface):
     def __init__(self, path_to_ctl: Path) -> None:
         """Initialize the Linux sound interface."""
         self._pactl_path = path_to_ctl
-
         self._beep_path = shutil.which("beep")
 
     def play_beep(self) -> None:
         """Play a beep sound using system beep."""
+        if self._beep_path is None:
+            error_message = "Beep command not found. Please install beep."
+            raise FileNotFoundError(error_message)
+
         completed_process = subprocess.run(
             [str(self._beep_path), "-f", "1000", "-l", "250"],
             check=False,
