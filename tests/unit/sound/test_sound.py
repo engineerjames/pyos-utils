@@ -3,10 +3,10 @@ from unittest.mock import patch
 
 import pytest
 
-from pyos_utils.sound._factory import SoundInterfaceFactory
-
 
 def test_sound_interface_exists() -> None:
+    from pyos_utils.sound._factory import SoundInterfaceFactory
+
     assert SoundInterfaceFactory.create_interface("win32") is not None
 
 
