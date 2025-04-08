@@ -56,7 +56,7 @@ class Backend(str, Enum):
 
 
 class LinuxSoundInterface(SoundInterface):
-    def __init__(self) -> None:
+    def __init__(self) -> None:  # TODO: Allow user to specify backend
         """Initialize the Linux sound interface."""
         self.backend_interface = Backend.get_interface()
 
