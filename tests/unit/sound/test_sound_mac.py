@@ -1,20 +1,31 @@
+import sys
+from collections.abc import Generator
+from typing import TYPE_CHECKING
 from unittest.mock import MagicMock, patch
 
 import pytest
 from pytest_mock import MockerFixture
 
-from pyos_utils.sound._exceptions import OperationFailedError
-from pyos_utils.sound._sound_mac import MacSoundInterface
+if TYPE_CHECKING:
+    from pyos_utils.sound._sound_mac import MacSoundInterface
+
+
+@pytest.fixture(autouse=True)
+def mock_platform() -> Generator[None, None, None]:
+    with patch.object(sys, "platform", "darwin"):
+        yield
 
 
 @pytest.fixture
-def mac_sound_interface(mocker: MockerFixture) -> MacSoundInterface:
+def mac_sound_interface(mocker: MockerFixture) -> "MacSoundInterface":
+    from pyos_utils.sound._sound_mac import MacSoundInterface
+
     mocker.patch("pathlib.Path.exists", return_value=True)
     return MacSoundInterface()
 
 
 @patch("subprocess.run")
-def test_play_beep(mock_run: MagicMock, mac_sound_interface: MacSoundInterface) -> None:
+def test_play_beep(mock_run: MagicMock, mac_sound_interface: "MacSoundInterface") -> None:
     mock_run.return_value = MagicMock(returncode=0)
     mac_sound_interface.play_beep()
     mock_run.assert_called_once_with(
@@ -25,14 +36,16 @@ def test_play_beep(mock_run: MagicMock, mac_sound_interface: MacSoundInterface) 
 
 
 @patch("subprocess.run")
-def test_play_beep_failure(mock_run: MagicMock, mac_sound_interface: MacSoundInterface) -> None:
+def test_play_beep_failure(mock_run: MagicMock, mac_sound_interface: "MacSoundInterface") -> None:
+    from pyos_utils.sound._exceptions import OperationFailedError
+
     mock_run.return_value = MagicMock(returncode=1, stderr="error")
     with pytest.raises(OperationFailedError):
         mac_sound_interface.play_beep()
 
 
 @patch("subprocess.run")
-def test_set_volume(mock_run: MagicMock, mac_sound_interface: MacSoundInterface) -> None:
+def test_set_volume(mock_run: MagicMock, mac_sound_interface: "MacSoundInterface") -> None:
     mock_run.return_value = MagicMock(returncode=0)
     mac_sound_interface.set_volume(0.5)
     mock_run.assert_called_once_with(
@@ -43,14 +56,16 @@ def test_set_volume(mock_run: MagicMock, mac_sound_interface: MacSoundInterface)
 
 
 @patch("subprocess.run")
-def test_set_volume_failure(mock_run: MagicMock, mac_sound_interface: MacSoundInterface) -> None:
+def test_set_volume_failure(mock_run: MagicMock, mac_sound_interface: "MacSoundInterface") -> None:
+    from pyos_utils.sound._exceptions import OperationFailedError
+
     mock_run.return_value = MagicMock(returncode=1, stderr="error")
     with pytest.raises(OperationFailedError):
         mac_sound_interface.set_volume(0.5)
 
 
 @patch("subprocess.run")
-def test_get_volume(mock_run: MagicMock, mac_sound_interface: MacSoundInterface) -> None:
+def test_get_volume(mock_run: MagicMock, mac_sound_interface: "MacSoundInterface") -> None:
     mock_run.return_value = MagicMock(returncode=0, stdout="50")
     volume: float = mac_sound_interface.get_volume()
     assert volume == 0.5
@@ -63,14 +78,16 @@ def test_get_volume(mock_run: MagicMock, mac_sound_interface: MacSoundInterface)
 
 
 @patch("subprocess.run")
-def test_get_volume_failure(mock_run: MagicMock, mac_sound_interface: MacSoundInterface) -> None:
+def test_get_volume_failure(mock_run: MagicMock, mac_sound_interface: "MacSoundInterface") -> None:
+    from pyos_utils.sound._exceptions import OperationFailedError
+
     mock_run.return_value = MagicMock(returncode=1, stderr="error")
     with pytest.raises(OperationFailedError):
         mac_sound_interface.get_volume()
 
 
 @patch("subprocess.run")
-def test_mute(mock_run: MagicMock, mac_sound_interface: MacSoundInterface) -> None:
+def test_mute(mock_run: MagicMock, mac_sound_interface: "MacSoundInterface") -> None:
     mock_run.return_value = MagicMock(returncode=0)
     mac_sound_interface.mute()
     mock_run.assert_called_once_with(
@@ -81,14 +98,16 @@ def test_mute(mock_run: MagicMock, mac_sound_interface: MacSoundInterface) -> No
 
 
 @patch("subprocess.run")
-def test_mute_failed(mock_run: MagicMock, mac_sound_interface: MacSoundInterface) -> None:
+def test_mute_failed(mock_run: MagicMock, mac_sound_interface: "MacSoundInterface") -> None:
+    from pyos_utils.sound._exceptions import OperationFailedError
+
     mock_run.return_value = MagicMock(returncode=1, stderr="error")
     with pytest.raises(OperationFailedError):
         mac_sound_interface.mute()
 
 
 @patch("subprocess.run")
-def test_unmute(mock_run: MagicMock, mac_sound_interface: MacSoundInterface) -> None:
+def test_unmute(mock_run: MagicMock, mac_sound_interface: "MacSoundInterface") -> None:
     mock_run.return_value = MagicMock(returncode=0)
     mac_sound_interface.unmute()
     mock_run.assert_called_once_with(
@@ -99,14 +118,16 @@ def test_unmute(mock_run: MagicMock, mac_sound_interface: MacSoundInterface) -> 
 
 
 @patch("subprocess.run")
-def test_unmute_failed(mock_run: MagicMock, mac_sound_interface: MacSoundInterface) -> None:
+def test_unmute_failed(mock_run: MagicMock, mac_sound_interface: "MacSoundInterface") -> None:
+    from pyos_utils.sound._exceptions import OperationFailedError
+
     mock_run.return_value = MagicMock(returncode=1, stderr="error")
     with pytest.raises(OperationFailedError):
         mac_sound_interface.unmute()
 
 
 @patch("subprocess.run")
-def test_get_mute(mock_run: MagicMock, mac_sound_interface: MacSoundInterface) -> None:
+def test_get_mute(mock_run: MagicMock, mac_sound_interface: "MacSoundInterface") -> None:
     mock_run.return_value = MagicMock(returncode=0, stdout="true")
     assert mac_sound_interface.get_mute() is True
     mock_run.assert_called_once_with(
@@ -118,6 +139,6 @@ def test_get_mute(mock_run: MagicMock, mac_sound_interface: MacSoundInterface) -
 
 
 @patch("subprocess.run")
-def test_get_mute_false(mock_run: MagicMock, mac_sound_interface: MacSoundInterface) -> None:
+def test_get_mute_false(mock_run: MagicMock, mac_sound_interface: "MacSoundInterface") -> None:
     mock_run.return_value = MagicMock(returncode=0, stdout="false")
     assert mac_sound_interface.get_mute() is False
