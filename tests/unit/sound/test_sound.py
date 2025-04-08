@@ -3,7 +3,9 @@ from unittest.mock import patch
 
 import pytest
 
-from pyos_utils.sound import _interface
+patch("pyos_utils.sound._factory.SoundInterfaceFactory.create_interface")
+
+from pyos_utils.sound import _interface  # noqa: E402
 
 
 def test_sound_interface_exists() -> None:

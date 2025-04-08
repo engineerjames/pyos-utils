@@ -4,9 +4,7 @@ from unittest.mock import Mock, patch
 
 import pytest
 
-from pyos_utils.sound._sound_linux import LinuxSoundInterface
-
-patch("pyos_utils.sound._factory.SoundInterfaceFactory.create_interface", return_value=LinuxSoundInterface)
+patch("pyos_utils.sound._factory.SoundInterfaceFactory.create_interface")
 
 from pyos_utils.sound._exceptions import OperationFailedError  # noqa: E402
 from pyos_utils.sound.linux_backends.pulse import PulseAudioInterface  # noqa: E402

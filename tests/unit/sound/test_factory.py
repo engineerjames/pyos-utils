@@ -3,10 +3,12 @@ from unittest.mock import patch
 
 import pytest
 
-from pyos_utils.sound._factory import SoundInterfaceFactory
-from pyos_utils.sound._sound_linux import Backend, LinuxSoundInterface
-from pyos_utils.sound._sound_mac import MacSoundInterface
-from pyos_utils.sound._sound_win import WindowsSoundInterface
+patch("pyos_utils.sound._factory.SoundInterfaceFactory.create_interface")
+
+from pyos_utils.sound._factory import SoundInterfaceFactory  # noqa: E402
+from pyos_utils.sound._sound_linux import Backend, LinuxSoundInterface  # noqa: E402
+from pyos_utils.sound._sound_mac import MacSoundInterface  # noqa: E402
+from pyos_utils.sound._sound_win import WindowsSoundInterface  # noqa: E402
 
 
 @pytest.fixture(autouse=True)
