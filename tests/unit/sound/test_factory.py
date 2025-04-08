@@ -15,10 +15,10 @@ def mock_platform_and_backend() -> Generator[None, None, None]:
         patch("pyos_utils.sound._sound_linux.Backend.get_interface", return_value="mock_interface"),
     ):
         # Import the modules only after patching
-        from pyos_utils.sound._factory import SoundInterfaceFactory
-        from pyos_utils.sound._sound_linux import Backend, LinuxSoundInterface
-        from pyos_utils.sound._sound_mac import MacSoundInterface
-        from pyos_utils.sound._sound_win import WindowsSoundInterface
+        from pyos_utils.sound._factory import SoundInterfaceFactory  # type: ignore[reportUnusedImport]
+        from pyos_utils.sound._sound_linux import Backend, LinuxSoundInterface  # type: ignore[reportUnusedImport]
+        from pyos_utils.sound._sound_mac import MacSoundInterface  # type: ignore[reportUnusedImport]
+        from pyos_utils.sound._sound_win import WindowsSoundInterface  # type: ignore[reportUnusedImport]
 
         yield
 

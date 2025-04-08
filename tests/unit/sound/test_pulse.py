@@ -4,10 +4,24 @@ from unittest.mock import Mock, patch
 
 import pytest
 
-patch("pyos_utils.sound._factory.SoundInterfaceFactory.create_interface")
 
-from pyos_utils.sound._exceptions import OperationFailedError  # noqa: E402
-from pyos_utils.sound.linux_backends.pulse import PulseAudioInterface  # noqa: E402
+@pytest.fixture(autouse=True)
+def mock_platform_and_backend() -> Generator[None, None, None]:
+    with (
+        patch("sys.platform", "linux"),
+        patch(
+            "pyos_utils.sound._sound_linux.Backend._detect_backend",
+            return_value=("PULSE", "/usr/bin/pactl"),
+        ),
+        patch("pyos_utils.sound._sound_linux.Backend.get_interface", return_value="mock_interface"),
+    ):
+        # Import modules after patching
+        global LinuxSoundInterface, OperationFailedError, PulseAudioInterface  # noqa: PLW0603
+        from pyos_utils.sound._exceptions import OperationFailedError
+        from pyos_utils.sound._sound_linux import LinuxSoundInterface
+        from pyos_utils.sound.linux_backends.pulse import PulseAudioInterface
+
+        yield
 
 
 @pytest.fixture
