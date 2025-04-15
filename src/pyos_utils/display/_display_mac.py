@@ -10,13 +10,21 @@ class MacDisplayInterface(DisplayInterface):
         """Get the display information."""
         displays: list[DisplayInfo] = []
         for s in NSScreen.screens():
+            name = s.localizedName()
             rect = s.frame()
             width = rect.size.width
             height = rect.size.height
             desc = s.deviceDescription()
             depth = desc["NSDeviceBitsPerSample"]
             fps = s.maximumFramesPerSecond()
-            display = DisplayInfo(width, height, depth, fps)
+
+            display = DisplayInfo(
+                name=name,
+                width=width,
+                height=height,
+                depth=depth,
+                fps=fps,
+            )
             displays.append(display)
 
         return displays
