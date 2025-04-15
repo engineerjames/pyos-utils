@@ -10,5 +10,5 @@ else:
     def PlaySound(sound: str, flags: int) -> None:  # noqa: D103, N802
         pass
 
-    SND_FILENAME = 0xDEADBEEF
-    SND_ASYNC = 0xDEADBEEF
+    SND_FILENAME = 0xDEADBEEF  # type: ignore[reportConstantRedefinition, reportGeneralTypeIssues]
+    SND_ASYNC = 0xDEADBEEF  # type: ignore[reportConstantRedefinition, reportGeneralTypeIssues]
