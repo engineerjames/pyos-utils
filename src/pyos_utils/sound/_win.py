@@ -1,9 +1,9 @@
 from pathlib import Path
 from typing import Any
 
-from . import _sound_utilities
+from . import _utilities
 from ._exceptions import BackendNotFoundError, OperationFailedError
-from ._sound_interface import SoundInterface
+from ._interface import SoundInterface
 from .external import comtypes, pycaw, winsound
 
 
@@ -31,7 +31,7 @@ class WindowsSoundInterface(SoundInterface):
         # pycaw uses a range from -65.25 to 0.0 in dB
         # Convert linear 0-1 to proper dB range
         try:
-            volume = _sound_utilities.normalize_sound(volume)
+            volume = _utilities.normalize_sound(volume)
             self._volume.SetMasterVolumeLevelScalar(volume, None)
         except Exception as e:
             error_msg = f"Failed to set Windows volume: {e}"

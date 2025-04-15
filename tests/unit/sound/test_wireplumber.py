@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 @pytest.fixture(autouse=True)
 def mock_backend_detection() -> Generator[None, None, None]:
     with patch(
-        "pyos_utils.sound._sound_linux.Backend._detect_backend",
+        "pyos_utils.sound._linux.Backend._detect_backend",
         return_value=("wireplumber", "/usr/bin/wpctl"),
     ):
         yield

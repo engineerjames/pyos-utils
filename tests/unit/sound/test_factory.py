@@ -7,7 +7,7 @@ import pytest
 @pytest.fixture(autouse=True)
 def mock_backend_detection() -> Generator[None, None, None]:
     with patch(
-        "pyos_utils.sound._sound_linux.Backend._detect_backend",
+        "pyos_utils.sound._linux.Backend._detect_backend",
         return_value=("wireplumber", "/usr/bin/wpctl"),
     ):
         yield
@@ -15,7 +15,7 @@ def mock_backend_detection() -> Generator[None, None, None]:
 
 def test_create_interface_linux() -> None:
     from pyos_utils.sound._factory import SoundInterfaceFactory
-    from pyos_utils.sound._sound_linux import LinuxSoundInterface
+    from pyos_utils.sound._linux import LinuxSoundInterface
 
     interface = SoundInterfaceFactory.create_interface("linux")
     assert isinstance(interface, LinuxSoundInterface)
@@ -23,7 +23,7 @@ def test_create_interface_linux() -> None:
 
 def test_create_interface_mac() -> None:
     from pyos_utils.sound._factory import SoundInterfaceFactory
-    from pyos_utils.sound._sound_mac import MacSoundInterface
+    from pyos_utils.sound._mac import MacSoundInterface
 
     # Mock shutil.which to return a valid path
     with patch("shutil.which", return_value="/usr/bin/osascript"), patch("pathlib.Path.exists", return_value=True):
@@ -33,7 +33,7 @@ def test_create_interface_mac() -> None:
 
 def test_create_interface_windows() -> None:
     from pyos_utils.sound._factory import SoundInterfaceFactory
-    from pyos_utils.sound._sound_win import WindowsSoundInterface
+    from pyos_utils.sound._win import WindowsSoundInterface
 
     interface = SoundInterfaceFactory.create_interface("win32")
     assert isinstance(interface, WindowsSoundInterface)

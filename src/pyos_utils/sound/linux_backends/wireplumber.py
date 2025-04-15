@@ -2,9 +2,9 @@ import shutil
 import subprocess
 from pathlib import Path
 
-from pyos_utils.sound import _sound_utilities
+from pyos_utils.sound import _utilities
 from pyos_utils.sound._exceptions import OperationFailedError
-from pyos_utils.sound._sound_interface import SoundInterface
+from pyos_utils.sound._interface import SoundInterface
 
 
 class WirePlumberInterface(SoundInterface):
@@ -37,7 +37,7 @@ class WirePlumberInterface(SoundInterface):
 
     def set_volume(self, volume: float) -> None:
         """Set the system volume (0.0 to 1.0)."""
-        volume = _sound_utilities.normalize_sound(volume)
+        volume = _utilities.normalize_sound(volume)
         volume_percent = int(volume * 100)
         completed_process = subprocess.run(
             [str(self._path_to_wpctl), "set-volume", "@DEFAULT_AUDIO_SINK@", f"{volume_percent}%"],

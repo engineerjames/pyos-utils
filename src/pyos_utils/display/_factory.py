@@ -1,6 +1,6 @@
 import sys
 
-from ._display_interface import DisplayInterface
+from ._interface import DisplayInterface
 
 
 class DisplayInterfaceFactory:
@@ -8,15 +8,15 @@ class DisplayInterfaceFactory:
     def create_interface(platform: str = sys.platform) -> DisplayInterface:
         """Create a display interface based on the specified platform."""
         if platform == "darwin":
-            from ._display_mac import MacDisplayInterface
+            from ._mac import MacDisplayInterface
 
             return MacDisplayInterface()
         if platform == "win32":
-            from ._display_win import WindowsDisplayInterface
+            from ._win import WindowsDisplayInterface
 
             return WindowsDisplayInterface()
         if platform == "linux":
-            from ._display_linux import LinuxDisplayInterface
+            from ._linux import LinuxDisplayInterface
 
             return LinuxDisplayInterface()
 
