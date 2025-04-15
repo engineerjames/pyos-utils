@@ -25,7 +25,7 @@ build-backend = "hatchling.build"
 
 [dependency-groups]
 dev = [
-    "pyright>=1.1.398",
+    "basedpyright>=1.28.5",
     "pytest>=8.3.4",
     "pytest-mock>=3.14.0",
     "ruff>=0.9.7",
@@ -83,4 +83,4 @@ select = [
 [tool.pytest.ini_options]
 log_cli = true
 log_cli_level = "INFO"
-pythonpath = ["."]
+pythonpath = [".", "src"]

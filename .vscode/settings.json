@@ -10,7 +10,7 @@
   },
   "python.testing.pytestArgs": ["tests"],
   "python.testing.unittestEnabled": false,
-  "python.languageServer": "Pylance",
+  "python.languageServer": "None",
   "python.testing.pytestEnabled": true,
   "[toml]": {
     "editor.defaultFormatter": "tamasfe.even-better-toml"
