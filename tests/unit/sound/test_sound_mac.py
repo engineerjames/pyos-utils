@@ -7,7 +7,7 @@ import pytest
 from pytest_mock import MockerFixture
 
 if TYPE_CHECKING:
-    from pyos_utils.sound._sound_mac import MacSoundInterface
+    from pyos_utils.sound._mac import MacSoundInterface
 
 
 @pytest.fixture(autouse=True)
@@ -18,7 +18,7 @@ def mock_platform() -> Generator[None, None, None]:
 
 @pytest.fixture
 def mac_sound_interface(mocker: MockerFixture) -> "MacSoundInterface":
-    from pyos_utils.sound._sound_mac import MacSoundInterface
+    from pyos_utils.sound._mac import MacSoundInterface
 
     mocker.patch("pathlib.Path.exists", return_value=True)
     return MacSoundInterface()

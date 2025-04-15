@@ -1,6 +1,6 @@
 from typing import Protocol
 
-from pyos_utils.display._display_info import DisplayInfo
+from pyos_utils.display._info import DisplayInfo
 
 
 class DisplayInterface(Protocol):

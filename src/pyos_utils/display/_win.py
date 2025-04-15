@@ -1,8 +1,8 @@
 import subprocess
 
-from pyos_utils.display._display_info import DisplayInfo
-from pyos_utils.display._display_interface import DisplayInterface
-from pyos_utils.display._display_utilities import get_bit_depth_from_colors
+from pyos_utils.display._info import DisplayInfo
+from pyos_utils.display._interface import DisplayInterface
+from pyos_utils.display._utilities import get_bit_depth_from_colors
 
 
 class WindowsDisplayInterface(DisplayInterface):

@@ -4,7 +4,7 @@ from enum import Enum
 from pathlib import Path
 
 from ._exceptions import BackendNotFoundError
-from ._sound_interface import SoundInterface
+from ._interface import SoundInterface
 from .linux_backends.pulse import PulseAudioInterface
 from .linux_backends.wireplumber import WirePlumberInterface
 

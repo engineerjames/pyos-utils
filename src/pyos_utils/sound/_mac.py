@@ -2,9 +2,9 @@ import shutil
 import subprocess
 from pathlib import Path
 
-from . import _sound_utilities
+from . import _utilities
 from ._exceptions import BackendNotFoundError, OperationFailedError
-from ._sound_interface import SoundInterface
+from ._interface import SoundInterface
 
 
 class MacSoundInterface(SoundInterface):
@@ -36,7 +36,7 @@ class MacSoundInterface(SoundInterface):
 
     def set_volume(self, volume: float) -> None:
         """Set the volume of the sound (0.0 to 1.0)."""
-        volume = _sound_utilities.normalize_sound(volume)
+        volume = _utilities.normalize_sound(volume)
         volume_int = int(volume * 100)  # Clamp value between 0 and 100
         completed_process = subprocess.run(
             [str(self._osascript_path), "-e", f"set volume output volume {volume_int}"],

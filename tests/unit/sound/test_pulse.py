@@ -6,12 +6,12 @@ from unittest.mock import Mock, patch
 import pytest
 
 if TYPE_CHECKING:
-    from pyos_utils.sound._sound_linux import PulseAudioInterface
+    from pyos_utils.sound._linux import PulseAudioInterface
 
 
 @pytest.fixture
 def pulse_interface() -> "PulseAudioInterface":
-    from pyos_utils.sound._sound_linux import PulseAudioInterface
+    from pyos_utils.sound._linux import PulseAudioInterface
 
     return PulseAudioInterface(Path("/usr/bin/pactl"))
 

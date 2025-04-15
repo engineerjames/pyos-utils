@@ -1,6 +1,6 @@
 import sys
 
-from ._sound_interface import SoundInterface
+from ._interface import SoundInterface
 
 
 class SoundInterfaceFactory:
@@ -8,15 +8,15 @@ class SoundInterfaceFactory:
     def create_interface(platform: str = sys.platform) -> SoundInterface:
         """Create a sound interface based on the specified platform."""
         if platform == "darwin":
-            from ._sound_mac import MacSoundInterface
+            from ._mac import MacSoundInterface
 
             return MacSoundInterface()
         if platform == "win32":
-            from ._sound_win import WindowsSoundInterface
+            from ._win import WindowsSoundInterface
 
             return WindowsSoundInterface()
         if platform == "linux":
-            from ._sound_linux import LinuxSoundInterface
+            from ._linux import LinuxSoundInterface
 
             return LinuxSoundInterface()
 
