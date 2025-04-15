@@ -10,15 +10,6 @@ dependencies = [
     "pyobjc-framework-Cocoa; sys_platform == 'darwin'",
 ]
 
-[tool.hatchling.package-data]
-pyos_utils = ["py.typed"]
-
-[tool.hatch.build.targets.sdist]
-include = ["src/**/*.py", "src/pyos_utils/py.typed", "README.md"]
-
-[tool.hatch.build.targets.wheel]
-include = ["src/**/*.py", "src/pyos_utils/py.typed"]
-
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
