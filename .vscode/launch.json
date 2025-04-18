@@ -1,0 +1,25 @@
+{
+    "configurations": [
+        {
+            "name": "Debug Display",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/tests/integration/display.py",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Debug Sound",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/tests/integration/sound.py",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Debug Networking",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/tests/integration/network.py",
+            "console": "integratedTerminal"
+        }
+    ]
+}

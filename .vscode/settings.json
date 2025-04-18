@@ -16,5 +16,8 @@
     "editor.defaultFormatter": "tamasfe.even-better-toml"
   },
   "basedpyright.analysis.typeCheckingMode": "recommended",
-  "basedpyright.analysis.diagnosticMode": "workspace"
+  "basedpyright.analysis.diagnosticMode": "workspace",
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  }
 }
