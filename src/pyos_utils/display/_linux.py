@@ -1,6 +1,5 @@
 import re
 import subprocess
-from re import Match
 from subprocess import CompletedProcess
 from typing import Any
 
@@ -19,10 +18,11 @@ class LinuxDisplayInterface(DisplayInterface):
         )
 
         displays: list[DisplayInfo] = []
+
         # Skip the first line which contains "Monitors: N"
         for line in result.stdout.splitlines()[1:]:
             # Format: " 0: +*HDMI-1 1920/527x1080/296+0+0  HDMI-1"  # noqa: ERA001
-            match: Match[str] | None = re.search(r"^\s*(\d+):\s+\+\*?(\S+)\s+(\d+)/\d+x(\d+)/\d+", line)
+            match: re.Match[str] | None = re.search(r"^\s*(\d+):\s+\+\*?(\S+)\s+(\d+)/\d+x(\d+)/\d+", line)
             if match:
                 screen_index: int = int(match.group(1))
                 name: str | Any = match.group(2)
@@ -41,7 +41,7 @@ class LinuxDisplayInterface(DisplayInterface):
                     # * Indicates the current setting
                     # + Indicates the preferred setting
                     if "*" in rate_line:
-                        rate_match: Match[str] | None = re.search(r"([\d.]+)\*", rate_line)
+                        rate_match: re.Match[str] | None = re.search(r"([\d.]+)\*", rate_line)
                         if rate_match:
                             fps = float(rate_match.group(1))
                             break
