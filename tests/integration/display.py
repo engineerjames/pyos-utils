@@ -1,10 +1,12 @@
-import time
-
 from pyos_utils import display
+from pyos_utils.display._info import DisplayInfo
+from pyos_utils.display._interface import DisplayInterface
 
 if __name__ == "__main__":
-    display_interface = display.DisplayInterfaceFactory.create_interface()
-    display_info = display_interface.get_info()
+    display_interface: DisplayInterface = display.DisplayInterfaceFactory.create_interface()
+    display_info: list[DisplayInfo] = display_interface.get_info()
     print(f"Found {len(display_info)} display(s).")
-    print(display_info[0])
-    time.sleep(1)
+
+    for i, info in enumerate(display_info):
+        print(f"Display {i}:")
+        print(info)
