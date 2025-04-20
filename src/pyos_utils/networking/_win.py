@@ -3,7 +3,7 @@ from pyos_utils.networking._interface import NetworkInterface
 
 
 class WindowsNetworkInterface(NetworkInterface):
-    """Linux implementation of the NetworkInterface."""
+    """Windows implementation of the NetworkInterface."""
 
     def get_info(self) -> list[NetworkInfo]:
         """Get the display information."""

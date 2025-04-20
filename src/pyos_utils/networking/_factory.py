@@ -20,5 +20,5 @@ class NetworkInterfaceFactory:
 
             return LinuxNetworkInterface()
 
-        msg = f"Platform {platform} is not supported"
+        msg: str = f"Platform {platform} is not supported"
         raise NotImplementedError(msg)
