@@ -6,5 +6,5 @@ class LinuxNetworkInterface(NetworkInterface):
     """Linux implementation of the NetworkInterface."""
 
     def get_info(self) -> list[NetworkInfo]:
-        """Get the display information."""
+        """Get the network information."""
         return []

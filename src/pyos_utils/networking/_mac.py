@@ -11,7 +11,7 @@ class MacNetworkInterface(NetworkInterface):
     """Mac implementation of the NetworkInterface."""
 
     def get_info(self) -> list[NetworkInfo]:
-        """Get the display information for all network interfaces."""
+        """Get the network information for all network interfaces."""
         interfaces: list[Any] = []
 
         # Get list of all hardware ports
@@ -19,13 +19,17 @@ class MacNetworkInterface(NetworkInterface):
         output: str = subprocess.check_output(cmd).decode()
 
         # Parse the output to get interface names and device names
-        ports: list[str] = output.split(sep="\n\n")
-        for port in ports:
-            if not port.strip():
+        lines: list[str] = [o for o in output.split(sep="\n") if o]
+        for i, line in enumerate(lines):
+            if "Hardware Port" not in line:
                 continue
 
-            name_match: Match[str] | None = re.search(r"Hardware Port: ([^(]+)", port)
-            device_match: Match[str] | None = re.search(r"Device: (.*)", port)
+            # Extract hardware port name and device name
+            # Example line: "Hardware Port: Wi-Fi (AirPort)"
+            # Example line: "Device: en0"
+            # Example line: "Ethernet Address: 00:00:00:00:00:00"
+            name_match: Match[str] | None = re.search(r"Hardware Port: ([^(]+)", line)
+            device_match: Match[str] | None = re.search(r"Device: (.*)", lines[i + 1])
 
             if name_match and device_match:
                 name: str | Any = name_match.group(1).strip()
@@ -49,4 +53,4 @@ if __name__ == "__main__":
     mac_interface = MacNetworkInterface()
     network_info = mac_interface.get_info()
     for info in network_info:
-        print(f"Name: {info.name}, IP Address: {info.ip_address}")
+        print(f"Name: {info.name}, IP Address: {info.ip_address}")  # noqa: T201
