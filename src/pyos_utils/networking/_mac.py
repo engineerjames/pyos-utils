@@ -12,10 +12,10 @@ class MacNetworkInterface(NetworkInterface):
 
     def get_info(self) -> list[NetworkInfo]:
         """Get the network information for all network interfaces."""
-        interfaces: list[Any] = []
+        interfaces: list[NetworkInfo] = []
 
         # Get list of all hardware ports
-        cmd: list[str | Any] = ["networksetup", "-listallhardwareports"]
+        cmd: list[str] = ["networksetup", "-listallhardwareports"]
         output: str = subprocess.check_output(cmd).decode()
 
         # Parse the output to get interface names and device names
@@ -32,8 +32,8 @@ class MacNetworkInterface(NetworkInterface):
             device_match: Match[str] | None = re.search(r"Device: (.*)", lines[i + 1])
 
             if name_match and device_match:
-                name: str | Any = name_match.group(1).strip()
-                device: str | Any = device_match.group(1).strip()
+                name: str = name_match.group(1).strip()
+                device: str = device_match.group(1).strip()
 
                 # Get IP address using ifconfig
                 try:
@@ -56,10 +56,3 @@ class MacNetworkInterface(NetworkInterface):
                     continue
 
         return interfaces
-
-
-if __name__ == "__main__":
-    mac_interface: MacNetworkInterface = MacNetworkInterface()
-    network_info: list[NetworkInfo] = mac_interface.get_info()
-    for info in network_info:
-        print(f"Name: {info.name}, IP Address: {info.ip_address}, is_active: {info.is_active}")  # noqa: T201
