@@ -11,3 +11,6 @@ class NetworkInfo:
 
     device_name: str | None = None
     """ The device name of the network adapter. Example: en0, eth0, wlan0, etc."""
+
+    is_active: bool | None = None
+    """ Whether the network adapter is active or not."""

@@ -40,9 +40,18 @@ class MacNetworkInterface(NetworkInterface):
                     cmd = ["ifconfig", device]
                     ifconfig_output: str = subprocess.check_output(cmd).decode()
                     ip_match: Match[str] | None = re.search(r"inet ([\d.]+)", ifconfig_output)
+                    active_match = re.search(r"status: (active|inactive)", ifconfig_output)
+                    is_active: bool | Any = active_match.group(1) == "active" if active_match else None
                     ip: str | Any = ip_match.group(1) if ip_match else None
 
-                    interfaces.append(NetworkInfo(name=name, device_name=device, ip_address=ip))
+                    interfaces.append(
+                        NetworkInfo(
+                            name=name,
+                            device_name=device,
+                            ip_address=ip,
+                            is_active=is_active,
+                        ),
+                    )
                 except subprocess.CalledProcessError:
                     continue
 
@@ -50,7 +59,7 @@ class MacNetworkInterface(NetworkInterface):
 
 
 if __name__ == "__main__":
-    mac_interface = MacNetworkInterface()
-    network_info = mac_interface.get_info()
+    mac_interface: MacNetworkInterface = MacNetworkInterface()
+    network_info: list[NetworkInfo] = mac_interface.get_info()
     for info in network_info:
-        print(f"Name: {info.name}, IP Address: {info.ip_address}")  # noqa: T201
+        print(f"Name: {info.name}, IP Address: {info.ip_address}, is_active: {info.is_active}")  # noqa: T201
